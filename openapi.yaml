@@ -1,0 +1,339 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Minecraft
+  license:
+    name: MIT
+servers:
+  - url: http://petstore.swagger.io/v1
+paths:
+  /shapes:
+    get:
+      summary: List all shapes
+      operationId: listShapes
+      tags:
+        - shapes
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (default 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: An array of shapes
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/Shapes"
+        '400':
+          description: "Bad Request"
+        '404':
+           description: "Not found" 
+    post:
+      summary: Create a Shape
+      operationId: createShapes
+      tags:
+        - shapes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShapeRequest'
+      responses:
+        '201':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shape"
+        '400':
+          description: "Bad Request"
+
+  /shapes/{shapeId}:
+    get:
+      summary: Info for a specific shape
+      operationId: showShapeById
+      tags:
+        - shapes
+      parameters:
+        - name: shapeId
+          in: path
+          required: true
+          description: The id of the shape to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shape"
+        '400':
+          description: "Bad Request"
+    delete:
+      summary: Delete a Shape
+      operationId: deleteShapeById
+      tags:
+        - shapes
+      parameters:
+        - name: shapeId
+          in: path
+          required: true
+          description: The id of the shape to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: "Not found"
+    patch:
+      summary: Update a shape
+      operationId: patchShapeById
+      tags:
+        - shapes
+      parameters:
+        - name: shapeId
+          in: path
+          required: true
+          description: The id of the shape to update
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shape"
+        '404':
+          description: "Not found"
+  /entities:
+    get:
+      summary: List all entities
+      operationId: listEntities
+      tags:
+        - entities
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (default 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: An array of entities
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/Entities"
+        '400':
+          description: "Bad Request"
+        '404':
+           description: "Not found" 
+    post:
+      summary: Create an Entity
+      operationId: createEntity
+      tags:
+        - entities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityRequest'
+      responses:
+        '201':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Entity"
+        '400':
+          description: "Bad Request"
+
+  /entities/{entityId}:
+    get:
+      summary: Info for a specific Entity
+      operationId: showEntityById
+      tags:
+        - entities
+      parameters:
+        - name: entityId
+          in: path
+          required: true
+          description: The id of the entity to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Entity"
+        '400':
+          description: "Bad Request"
+    delete:
+      summary: Delete an Entity
+      operationId: deleteEntityById
+      tags:
+        - entities
+      parameters:
+        - name: entityId
+          in: path
+          required: true
+          description: The id of the entity to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Entity"
+        '404':
+          description: "Not found"
+    patch:
+      summary: Update an Entity
+      operationId: patchEntityById
+      tags:
+        - entities
+      parameters:
+        - name: entityId
+          in: path
+          required: true
+          description: The id of the entity to update
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Entity"
+        '404':
+          description: "Not found"
+components:
+  schemas:
+    Entity:
+      required:
+        - id
+        - location
+        - entityType
+        - customName
+        - status
+      properties:
+        id:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        entityType:
+          type: string
+        customName:
+          type: string
+        status:
+          type: string
+          enum: [initializing, ready, deleting, updating]
+    Entities:
+      type: array
+      items:
+        $ref: "#/components/schemas/Entity"
+    EntityRequest:
+      required:
+        - location
+        - entityType
+        - customName
+      properties:
+        location:
+          $ref: "#/components/schemas/Location"
+        entityType:
+          type: string
+        customName:
+          type: string
+    Shape:
+      required:
+        - id
+        - location
+        - shapeType
+        - material
+        - dimensions
+        - previousData
+        - status
+      properties:
+        id:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        shapeType:
+          type: string
+          enum: [cube,cylinder]
+        material:
+          type: string
+        previousData:
+          type: array
+          items:
+            type: string
+        dimensions:
+          oneOf:
+            - $ref: '#/components/schemas/CubeDimensions'
+            - $ref: '#/components/schemas/CylinderDimensions'
+        status:
+          type: string
+          enum: [initializing, ready, deleting, updating]
+    Shapes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Shape"
+    ShapeRequest:
+      required:
+        - location
+        - shapeType
+        - material
+        - dimensions
+      properties:
+        location:
+          $ref: "#/components/schemas/Location"
+        shapeType:
+          type: string
+          enum: [cube, cylinder]
+        dimensions:
+          oneOf:
+            - $ref: '#/components/schemas/CubeDimensions'
+            - $ref: '#/components/schemas/CylinderDimensions'
+        material:
+          type: string
+    CubeDimensions:
+      properties:
+        lengthX:
+          type: integer
+        heightY:
+          type: integer
+        widthZ:
+          type: integer
+    CylinderDimensions:
+      properties:
+        radius:
+          type: integer
+        height:
+          type: integer
+    Location:
+      properties:
+        x:
+          type: integer
+        y:
+          type: integer
+        z:
+          type: integer
+        world:
+          type: string
+
