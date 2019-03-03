@@ -8,6 +8,16 @@ type Location struct {
 	World string `json:"world"`
 }
 
+// NewLocation is a constructor for Location
+func NewLocation(x int, y int, z int, world string) *Location {
+	return &Location{
+		X:     x,
+		Y:     y,
+		Z:     z,
+		World: world,
+	}
+}
+
 // ResourceStatus represents a resource's status.
 type ResourceStatus string
 

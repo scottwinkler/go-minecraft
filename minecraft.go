@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	//userAgent = "go-minecraft"
+	userAgent = "go-minecraft"
 
 	// DefaultAddress of Minecraft Server plugin.
 	DefaultAddress = "http://localhost:8080"
@@ -29,8 +29,8 @@ const (
 )
 
 var (
-	// ErrUnauthorized is returned when a receiving a 400.
-	ErrUnauthorized = errors.New("bad request")
+	// ErrBadRequest is returned when a receiving a 400.
+	ErrBadRequest = errors.New("bad request")
 	// ErrResourceNotFound is returned when a receiving a 404.
 	ErrResourceNotFound = errors.New("resource not found")
 )
@@ -77,6 +77,9 @@ type Client struct {
 	headers http.Header
 	http    *http.Client
 	limiter *rate.Limiter
+
+	Shapes   Shapes
+	Entities Entities
 }
 
 // NewClient creates a new Minecraft API client.
@@ -116,6 +119,10 @@ func NewClient(cfg *Config) (*Client, error) {
 		headers: config.Headers,
 		http:    config.HTTPClient,
 	}
+
+	// Create the services.
+	client.Shapes = &shapes{client: client}
+	client.Entities = &entities{client: client}
 
 	return client, nil
 }
@@ -200,21 +207,6 @@ func (c *Client) do(ctx context.Context, req *http.Request, v interface{}) error
 	if v == nil {
 		return nil
 	}
-	/*
-		// If v implements io.Writer, write the raw response body.
-		if w, ok := v.(io.Writer); ok {
-			_, err = io.Copy(w, resp.Body)
-			return err
-		}
-
-		// Get the value of v so we can test if it's a struct.
-		dst := reflect.Indirect(reflect.ValueOf(v))
-
-		// Return an error if v is not a struct or an io.Writer.
-		if dst.Kind() != reflect.Struct {
-			return fmt.Errorf("v must be a struct or an io.Writer")
-		}
-		return jsonapi.UnmarshalPayload(resp.Body, v)*/
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
 	return json.Unmarshal(buf.Bytes(), v)
@@ -227,8 +219,8 @@ func checkResponseCode(r *http.Response) error {
 	}
 
 	switch r.StatusCode {
-	case 401:
-		return ErrUnauthorized
+	case 400:
+		return ErrBadRequest
 	case 404:
 		return ErrResourceNotFound
 	}

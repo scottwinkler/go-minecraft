@@ -66,10 +66,20 @@ type CubeDimensions struct {
 	WidthZ  int `json:"widthZ"`
 }
 
+// NewCubeDimensions is a constructor for CubeDimensions
+func NewCubeDimensions(lengthX int, heightY int, widthZ int) *CubeDimensions {
+	return &CubeDimensions{LengthX: lengthX, HeightY: heightY, WidthZ: widthZ}
+}
+
 // CylinderDimensions is a Dimensions implementation
 type CylinderDimensions struct {
 	Height int `json:"height"`
 	Radius int `json:"radius"`
+}
+
+// NewCylinderDimensions is a constructor for CubeDimensions
+func NewCylinderDimensions(height int, radius int) *CylinderDimensions {
+	return &CylinderDimensions{Height: height, Radius: radius}
 }
 
 // ShapeListOptions represents the options for listing Shapes.
@@ -98,7 +108,7 @@ type ShapeCreateOptions struct {
 	*Location  `json:"location"`
 	ShapeType  `json:"ShapeType"`
 	Material   string      `json:"material"`
-	Dimensions interface{} `json:dimensions`
+	Dimensions interface{} `json:"dimensions"`
 }
 
 func (e ShapeCreateOptions) valid() error {
