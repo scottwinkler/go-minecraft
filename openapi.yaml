@@ -30,8 +30,6 @@ paths:
                 $ref: "#/components/schemas/Shapes"
         '400':
           description: "Bad Request"
-        '404':
-           description: "Not found" 
     post:
       summary: Create a Shape
       operationId: createShapes
@@ -75,6 +73,8 @@ paths:
                 $ref: "#/components/schemas/Shape"
         '400':
           description: "Bad Request"
+        '404':
+           description: "Not found" 
     delete:
       summary: Delete a Shape
       operationId: deleteShapeById
@@ -106,11 +106,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Expected response to a valid request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Shape"
+          description: "Ok"
         '404':
           description: "Not found"
   /entities:
@@ -136,8 +132,6 @@ paths:
                 $ref: "#/components/schemas/Entities"
         '400':
           description: "Bad Request"
-        '404':
-           description: "Not found" 
     post:
       summary: Create an Entity
       operationId: createEntity
@@ -181,6 +175,8 @@ paths:
                 $ref: "#/components/schemas/Entity"
         '400':
           description: "Bad Request"
+        '404':
+           description: "Not found" 
     delete:
       summary: Delete an Entity
       operationId: deleteEntityById
@@ -195,11 +191,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Expected response to a valid request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Entity"
+          description: "Ok"
         '404':
           description: "Not found"
     patch:
