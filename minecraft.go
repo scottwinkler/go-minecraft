@@ -14,7 +14,7 @@ import (
 	"strings"
 
 	"github.com/google/go-querystring/query"
-	"github.com/hashicorp/go-cleanhttp"
+	cleanhttp "github.com/hashicorp/go-cleanhttp"
 	"github.com/svanharmelen/jsonapi"
 	"golang.org/x/time/rate"
 )

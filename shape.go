@@ -46,7 +46,7 @@ type Shape struct {
 	ShapeType    `json:"shapeType"`
 	Material     string         `json:"material"`
 	PreviousData []string       `json:"previousData"`
-	Dimensions   interface{}    `json:dimensions`
+	Dimensions   interface{}    `json:"dimensions"`
 	Status       ResourceStatus `json:"status"`
 }
 
@@ -62,9 +62,9 @@ const (
 // Dimensions is not being cast properly. This is a ghetto fix
 func castDimensions(dimensions interface{}, shapeType ShapeType) interface{} {
 	d := dimensions.(map[string]interface{})
-	m = make(map[string]int)
+	m := make(map[string]int)
 	for key, value := range d {
-		m[key] = value.(string)
+		m[key] = value.(int)
 	}
 	switch shapeType {
 	case ShapeTypeCube:
@@ -72,6 +72,7 @@ func castDimensions(dimensions interface{}, shapeType ShapeType) interface{} {
 	case ShapeTypeCylinder:
 		return NewCylinderDimensions(m["height"], m["radius"])
 	}
+	return nil
 }
 
 // CubeDimensions is a Dimensions implementation
@@ -115,7 +116,7 @@ func (s *shapes) List(ctx context.Context, options ShapeListOptions) (*ShapeList
 		return nil, err
 	}
 	for _, shp := range shapel.Items {
-		shp.Dimensions = castDimensions(shp.Dimensions)
+		shp.Dimensions = castDimensions(shp.Dimensions, shp.ShapeType)
 	}
 	return shapel, nil
 }
@@ -160,7 +161,7 @@ func (s *shapes) Create(ctx context.Context, options ShapeCreateOptions) (*Shape
 	if err != nil {
 		return nil, err
 	}
-	shp.Dimensions = castDimensions(shp.Dimensions)
+	shp.Dimensions = castDimensions(shp.Dimensions, shp.ShapeType)
 	return shp, nil
 }
 
@@ -181,7 +182,7 @@ func (s *shapes) Read(ctx context.Context, ShapeID string) (*Shape, error) {
 	if err != nil {
 		return nil, err
 	}
-	shp.Dimensions = castDimensions(shp.Dimensions)
+	shp.Dimensions = castDimensions(shp.Dimensions, shp.ShapeType)
 	return shp, nil
 }
 
@@ -190,7 +191,7 @@ type ShapeUpdateOptions struct {
 	*Location  `json:"location"`
 	ShapeType  `json:"shapeType"`
 	Material   string      `json:"material"`
-	Dimensions interface{} `json:dimensions`
+	Dimensions interface{} `json:"dimensions"`
 }
 
 // Update attributes of an existing Shape.
@@ -210,7 +211,7 @@ func (s *shapes) Update(ctx context.Context, ShapeID string, options ShapeUpdate
 	if err != nil {
 		return nil, err
 	}
-	shp.Dimensions = castDimensions(shp.Dimensions)
+	shp.Dimensions = castDimensions(shp.Dimensions, shp.ShapeType)
 	return shp, nil
 }
 
