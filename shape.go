@@ -64,7 +64,7 @@ func castDimensions(dimensions interface{}, shapeType ShapeType) interface{} {
 	d := dimensions.(map[string]interface{})
 	m := make(map[string]int)
 	for key, value := range d {
-		m[key] = value.(int)
+		m[key] = int(value.(float64))
 	}
 	switch shapeType {
 	case ShapeTypeCube:
