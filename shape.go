@@ -106,7 +106,7 @@ func (s *shapes) List(ctx context.Context, options ShapeListOptions) (*ShapeList
 // ShapeCreateOptions represents the options for creating a Shape.
 type ShapeCreateOptions struct {
 	*Location  `json:"location"`
-	ShapeType  `json:"ShapeType"`
+	ShapeType  `json:"shapeType"`
 	Material   string      `json:"material"`
 	Dimensions interface{} `json:"dimensions"`
 }
@@ -171,7 +171,7 @@ func (s *shapes) Read(ctx context.Context, ShapeID string) (*Shape, error) {
 // ShapeUpdateOptions represents the options for updating a Shape.
 type ShapeUpdateOptions struct {
 	*Location  `json:"location"`
-	ShapeType  `json:"ShapeType"`
+	ShapeType  `json:"shapeType"`
 	Material   string      `json:"material"`
 	Dimensions interface{} `json:dimensions`
 }
