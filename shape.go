@@ -43,7 +43,7 @@ type ShapeList struct {
 type Shape struct {
 	ID           string `json:"id"`
 	*Location    `json:"location"`
-	ShapeType    `json:"ShapeType"`
+	ShapeType    `json:"shapeType"`
 	Material     string         `json:"material"`
 	PreviousData []string       `json:"previousData"`
 	Dimensions   interface{}    `json:dimensions`
