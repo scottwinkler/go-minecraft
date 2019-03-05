@@ -59,6 +59,21 @@ const (
 	ShapeTypeCylinder ShapeType = "cylinder"
 )
 
+// Dimensions is not being cast properly. This is a ghetto fix
+func castDimensions(dimensions interface{}, shapeType ShapeType) interface{} {
+	d := dimensions.(map[string]interface{})
+	m = make(map[string]int)
+	for key, value := range d {
+		m[key] = value.(string)
+	}
+	switch shapeType {
+	case ShapeTypeCube:
+		return NewCubeDimensions(m["lengthX"], m["heightY"], m["widthZ"])
+	case ShapeTypeCylinder:
+		return NewCylinderDimensions(m["height"], m["radius"])
+	}
+}
+
 // CubeDimensions is a Dimensions implementation
 type CubeDimensions struct {
 	LengthX int `json:"lengthX"`
@@ -99,7 +114,9 @@ func (s *shapes) List(ctx context.Context, options ShapeListOptions) (*ShapeList
 	if err != nil {
 		return nil, err
 	}
-
+	for _, shp := range shapel.Items {
+		shp.Dimensions = castDimensions(shp.Dimensions)
+	}
 	return shapel, nil
 }
 
@@ -143,7 +160,7 @@ func (s *shapes) Create(ctx context.Context, options ShapeCreateOptions) (*Shape
 	if err != nil {
 		return nil, err
 	}
-
+	shp.Dimensions = castDimensions(shp.Dimensions)
 	return shp, nil
 }
 
@@ -164,7 +181,7 @@ func (s *shapes) Read(ctx context.Context, ShapeID string) (*Shape, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	shp.Dimensions = castDimensions(shp.Dimensions)
 	return shp, nil
 }
 
@@ -193,7 +210,7 @@ func (s *shapes) Update(ctx context.Context, ShapeID string, options ShapeUpdate
 	if err != nil {
 		return nil, err
 	}
-
+	shp.Dimensions = castDimensions(shp.Dimensions)
 	return shp, nil
 }
 
