@@ -135,7 +135,8 @@ func NewClient(cfg *Config) (*Client, error) {
 // request body. If the method is GET, the value will be parsed and added as
 // query parameters.
 func (c *Client) newRequest(method, path string, v interface{}) (*http.Request, error) {
-	u, err := c.baseURL.Parse(path)
+	// have to add the odd "/" at end because of jersey issues
+	u, err := c.baseURL.Parse(path + "/")
 	if err != nil {
 		return nil, err
 	}
@@ -153,7 +154,7 @@ func (c *Client) newRequest(method, path string, v interface{}) (*http.Request, 
 	case "PATCH", "POST":
 		if v != nil {
 			dat, _ := json.Marshal(v)
-			log.Printf("[DEBUG] body: " + string(dat))
+			log.Printf("[DEBUG] go-minecraft body: " + string(dat))
 			body = bytes.NewReader(dat)
 		}
 	}
@@ -183,7 +184,7 @@ func (c *Client) newRequest(method, path string, v interface{}) (*http.Request, 
 func (c *Client) do(ctx context.Context, req *http.Request, v interface{}) error {
 	// Add the context to the request.
 	req = req.WithContext(ctx)
-	log.Printf("[DEBUG] request: %v", req)
+	log.Printf("[DEBUG] go-minecraft request: %v", req)
 	// Execute the request and check the response.
 	resp, err := c.http.Do(req)
 	if err != nil {
@@ -197,7 +198,7 @@ func (c *Client) do(ctx context.Context, req *http.Request, v interface{}) error
 		}
 	}
 	defer resp.Body.Close()
-	log.Printf("[DEBUG] response: %v", resp)
+	log.Printf("[DEBUG] go-minecraft response: %v", resp)
 	// Basic response checking.
 	if err := checkResponseCode(resp); err != nil {
 		return err
