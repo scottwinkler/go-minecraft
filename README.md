@@ -1,7 +1,7 @@
 Minecraft Go Client
 ==============================
 
-This is an API client for [terraform-minecraft-plugin]().
+This is an API client for [terraform-minecraft-plugin](https://github.com/scottwinkler/terraform-minecraft-plugin).
 
 ## NOTE
 
